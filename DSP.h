@@ -32,7 +32,7 @@
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 extern void DSP_init(void);
-extern void DSP_program(float *leftChannel, float *rightChannel);
+extern void DSP_program(float *rightChannel, float *leftChannel);
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // ~~~ FILTER STRUCTS ~~~
