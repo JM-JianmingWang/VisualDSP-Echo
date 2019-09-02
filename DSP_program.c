@@ -76,7 +76,7 @@ void DSP_init(void)
 // -------------------------------------------------
 // ~~~ Main DSP Path ~~~
 // -------------------------------------------------
-void DSP_program(float *leftChannel, float *rightChannel)
+void DSP_program(float *rightChannel, float *leftChannel)
 {
 	int i;
 
