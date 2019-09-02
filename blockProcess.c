@@ -6,8 +6,8 @@
 clock_t start_t, end_t, total_t;
 float clocks, timer;
 
-void Block_Fixed_To_Float( int * Fixed_In, float * Float_Out_L, float * Float_Out_R );
-void Block_Float_To_Fixed( int * Fixed_Out, float * Float_In_L, float * Float_In_R );
+void Block_Fixed_To_Float( int * Fixed_In, float * Float_Out_R, float * Float_Out_L );
+void Block_Float_To_Fixed( int * Fixed_Out, float * Float_In_R, float * Float_In_L );
 
 void processBlock(unsigned int *block_ptr)
 {
@@ -26,7 +26,7 @@ void processBlock(unsigned int *block_ptr)
     isProcessing = 1;
 
 
-    Block_Fixed_To_Float((int *) block_ptr, leftChannel, rightChannel);
+    Block_Fixed_To_Float((int *) block_ptr, rightChannel, leftChannel);
 
     for(i=0; i<NUM_SAMPLES/2;i++)
     {
@@ -35,7 +35,7 @@ void processBlock(unsigned int *block_ptr)
     }
 
 
-    DSP_program(leftChannel, rightChannel);
+    DSP_program(rightChannel, leftChannel);
 
 
     for(i=0; i<NUM_SAMPLES/2;i++)
@@ -44,7 +44,7 @@ void processBlock(unsigned int *block_ptr)
     	rightChannel[i] = rightChannel[i]*mix + rightDry[i]*(1-mix);
     }
 
-    Block_Float_To_Fixed((int *) block_ptr, leftChannel, rightChannel);
+    Block_Float_To_Fixed((int *) block_ptr, rightChannel, leftChannel);
 
 
 
@@ -58,24 +58,24 @@ void processBlock(unsigned int *block_ptr)
 
 }
 
-void Block_Fixed_To_Float( int * Fixed_In, float * Float_Out_L, float * Float_Out_R )
+void Block_Fixed_To_Float( int * Fixed_In, float * Float_Out_R, float * Float_Out_L )
 	{
 	int i;
 	#pragma SIMD_for
 	for (i=0;i<NUM_SAMPLES/2;i++)
 	{
-		Float_Out_L[i] = ((float) (Fixed_In[2*i]<<8)) * (1.0/2147483648.0);
-		Float_Out_R[i] = ((float) (Fixed_In[2*i+1]<<8)) * (1.0/2147483648.0);
+		Float_Out_R[i] = ((float) (Fixed_In[2*i]<<8)) * (1.0/2147483648.0);
+		Float_Out_L[i] = ((float) (Fixed_In[2*i+1]<<8)) * (1.0/2147483648.0);
 	}
 }
 
-void Block_Float_To_Fixed( int * Fixed_Out, float * Float_In_L, float * Float_In_R )
+void Block_Float_To_Fixed( int * Fixed_Out, float * Float_In_R, float * Float_In_L )
 {
 	int i;
 	#pragma SIMD_for
 	for (i=0;i<NUM_SAMPLES/2;i++)
 	{
-		Fixed_Out[2*i] = ((int) (2147483648.0*Float_In_L[i]))>>8;
-		Fixed_Out[2*i+1] = ((int) (2147483648.0*Float_In_R[i]))>>8;
+		Fixed_Out[2*i] = ((int) (2147483648.0*Float_In_R[i]))>>8;
+		Fixed_Out[2*i+1] = ((int) (2147483648.0*Float_In_L[i]))>>8;
 	}
 }
